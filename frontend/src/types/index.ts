@@ -244,3 +244,265 @@ export interface PaginatedResponse<T> {
   page: number;
   page_size: number;
 }
+
+/* ========== Phase 2: Production Line Types ========== */
+export interface ProductionLine {
+  id: number;
+  code: string;
+  name: string;
+  name_en?: string;
+  area?: string;
+  description?: string;
+  manager?: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+/* ========== Phase 2: Machine Types ========== */
+export interface Machine {
+  id: number;
+  code: string;
+  name: string;
+  name_en?: string;
+  machine_type: string;
+  model?: string;
+  manufacturer?: string;
+  serial_number?: string;
+  line_id?: number;
+  location?: string;
+  install_date?: string;
+  warranty_expiry?: string;
+  status: string;
+  current_running_hours: number;
+  last_maintenance_date?: string;
+  next_maintenance_date?: string;
+  maintenance_interval_hours?: number;
+  specifications?: Record<string, any>;
+  image_url?: string;
+  description?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  line?: ProductionLine;
+  parts_count: number;
+  critical_parts_count: number;
+}
+
+export interface MachineDetail extends Machine {
+  total_maintenance_count: number;
+  total_downtime_hours: number;
+}
+
+/* ========== Phase 2: Machine Part Types ========== */
+export interface MachinePart {
+  id: number;
+  machine_id: number;
+  material_id: number;
+  position?: string;
+  lifetime_hours?: number;
+  current_hours: number;
+  lifetime_percentage: number;
+  installed_date?: string;
+  expected_replace_date?: string;
+  last_replaced_date?: string;
+  status: string;
+  serial_number?: string;
+  lot_number?: string;
+  note?: string;
+  created_at: string;
+  updated_at: string;
+  material_code?: string;
+  material_name?: string;
+}
+
+/* ========== Phase 2: Maintenance Log Types ========== */
+export interface MaintenanceLogItem {
+  id: number;
+  log_id: number;
+  material_id: number;
+  old_part_id?: number;
+  quantity: number;
+  action_type: string;
+  note?: string;
+  material_name?: string;
+  material_code?: string;
+}
+
+export interface MaintenanceLog {
+  id: number;
+  log_number: string;
+  machine_id: number;
+  maintenance_type: string;
+  maintenance_date: string;
+  shift?: string;
+  running_hours_at_time?: number;
+  description: string;
+  root_cause?: string;
+  action_taken?: string;
+  downtime_hours?: number;
+  issue_id?: number;
+  performed_by: number;
+  status: string;
+  created_at: string;
+  performer_name?: string;
+  machine_name?: string;
+  machine_code?: string;
+  items: MaintenanceLogItem[];
+}
+
+/* ========== Phase 2: Running Hours Types ========== */
+export interface MachineRunningHour {
+  id: number;
+  machine_id: number;
+  record_date: string;
+  running_hours: number;
+  cumulative_hours: number;
+  shift?: string;
+  recorded_by?: number;
+  recorder_name?: string;
+  note?: string;
+  created_at: string;
+}
+
+/* ========== Phase 2: Parts Tracking Alerts ========== */
+export interface PartLifetimeAlert {
+  part_id: number;
+  machine_id: number;
+  machine_code: string;
+  machine_name: string;
+  line_name?: string;
+  material_id: number;
+  material_code: string;
+  material_name: string;
+  position?: string;
+  lifetime_hours?: number;
+  current_hours: number;
+  lifetime_percentage: number;
+  installed_date?: string;
+  expected_replace_date?: string;
+  status: string;
+}
+
+export interface LeadTimeAlert {
+  material_id: number;
+  material_code: string;
+  material_name: string;
+  supplier_name?: string;
+  current_stock: number;
+  min_quantity: number;
+  lead_time_days?: number;
+  avg_daily_usage?: number;
+  days_until_stockout?: number;
+  reorder_recommended: boolean;
+}
+
+export interface PartsOverview {
+  total_parts_installed: number;
+  active_parts: number;
+  warning_parts: number;
+  critical_parts: number;
+  expired_parts: number;
+  total_machines: number;
+  running_machines: number;
+  maintenance_this_month: number;
+  total_downtime_this_month: number;
+}
+
+export interface MachineDashboardSummary {
+  total_machines: number;
+  running_machines: number;
+  broken_machines: number;
+  parts_critical_count: number;
+  maintenance_this_month: number;
+  avg_downtime_this_month: number;
+}
+
+/* ========== Phase 3: Reporting Types ========== */
+
+export interface InventoryValuationItem {
+  material_id: number;
+  material_code: string;
+  material_name: string;
+  unit: string;
+  opening_stock: number;
+  opening_value: number;
+  inward_qty: number;
+  inward_value: number;
+  outward_qty: number;
+  outward_value: number;
+  closing_stock: number;
+  closing_value: number;
+}
+
+export interface InventoryValuationReport {
+  start_date: string;
+  end_date: string;
+  warehouse_id?: number;
+  items: InventoryValuationItem[];
+  total_opening_value: number;
+  total_inward_value: number;
+  total_outward_value: number;
+  total_closing_value: number;
+}
+
+export interface StockCardItem {
+  transaction_date: string;
+  transaction_type: string;
+  reference_number?: string;
+  inward_qty: number;
+  outward_qty: number;
+  balance: number;
+  note?: string;
+}
+
+export interface StockCardReport {
+  material_id: number;
+  material_code: string;
+  material_name: string;
+  unit: string;
+  start_date: string;
+  end_date: string;
+  opening_balance: number;
+  closing_balance: number;
+  transactions: StockCardItem[];
+}
+
+export interface AbcAnalysisItem {
+  material_id: number;
+  material_code: string;
+  material_name: string;
+  unit: string;
+  total_usage_qty: number;
+  total_usage_value: number;
+  cumulative_value: number;
+  cumulative_percentage: number;
+  abc_class: string;
+}
+
+export interface AbcAnalysisReport {
+  start_date: string;
+  end_date: string;
+  items: AbcAnalysisItem[];
+  summary_a: number;
+  summary_b: number;
+  summary_c: number;
+}
+
+export interface MaintenanceCostItem {
+  machine_id: number;
+  machine_code: string;
+  machine_name: string;
+  line_name?: string;
+  maintenance_count: number;
+  total_downtime: number;
+  parts_replaced_count: number;
+  total_cost: number;
+}
+
+export interface MaintenanceCostReport {
+  start_date: string;
+  end_date: string;
+  items: MaintenanceCostItem[];
+  total_overall_cost: number;
+}
+

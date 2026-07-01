@@ -295,8 +295,257 @@ async def seed_database():
         await session.flush()
         print(f"✅ Min-Max configs seeded ({len(min_max_configs)} configs)")
 
+        # ============== Phase 2: Production Lines ==============
+        from datetime import date, timedelta
+
+        lines = [
+            ProductionLine(code="LINE-A", name="Line SMT A", name_en="SMT Line A",
+                          area="SMT", manager="Trần Thị Sản Xuất"),
+            ProductionLine(code="LINE-B", name="Line SMT B", name_en="SMT Line B",
+                          area="SMT", manager="Trần Thị Sản Xuất"),
+            ProductionLine(code="LINE-C", name="Line Assembly", name_en="Assembly Line",
+                          area="Assembly", manager="Phạm Kỹ Sư"),
+            ProductionLine(code="LINE-D", name="Line Testing & Packaging", name_en="Testing & Packaging Line",
+                          area="Testing", manager="Vũ Chất Lượng"),
+        ]
+        session.add_all(lines)
+        await session.flush()
+        print("✅ Production Lines seeded (4 lines)")
+
+        # ============== Phase 2: Machines ==============
+        today = date.today()
+        machines_data = [
+            # Line A - SMT
+            Machine(code="MC-A01", name="Máy in kem hàn DEK", name_en="DEK Solder Paste Printer",
+                   machine_type="smt", model="DEK Horizon 03iX", manufacturer="ASM",
+                   serial_number="DEK-2022-001", line_id=lines[0].id, location="Line A - Đầu line",
+                   install_date=today - timedelta(days=730), status="running",
+                   current_running_hours=Decimal("12500"), maintenance_interval_hours=2000,
+                   last_maintenance_date=today - timedelta(days=15),
+                   next_maintenance_date=today + timedelta(days=45),
+                   specifications={"speed": "120 boards/hr", "accuracy": "±25μm"}),
+            Machine(code="MC-A02", name="Máy gắn chip SMT Panasonic NPM-W2", name_en="Panasonic NPM-W2 Mounter",
+                   machine_type="smt", model="NPM-W2", manufacturer="Panasonic",
+                   serial_number="NPM-2021-015", line_id=lines[0].id, location="Line A - Giữa line",
+                   install_date=today - timedelta(days=1095), status="running",
+                   current_running_hours=Decimal("18200"), maintenance_interval_hours=3000,
+                   last_maintenance_date=today - timedelta(days=30),
+                   specifications={"speed": "76,000 cph", "heads": "16"}),
+            Machine(code="MC-A03", name="Lò hàn Reflow Heller 1913 MK5", name_en="Heller Reflow Oven",
+                   machine_type="smt", model="1913 MK5", manufacturer="Heller",
+                   serial_number="HLR-2020-007", line_id=lines[0].id, location="Line A - Cuối line",
+                   install_date=today - timedelta(days=1460), status="running",
+                   current_running_hours=Decimal("22000"), maintenance_interval_hours=2500,
+                   last_maintenance_date=today - timedelta(days=60),
+                   specifications={"zones": "13", "max_temp": "350°C"}),
+            # Line B - SMT
+            Machine(code="MC-B01", name="Máy in kem hàn MPM Momentum", name_en="MPM Momentum Printer",
+                   machine_type="smt", model="Momentum HiE", manufacturer="ITW EAE",
+                   serial_number="MPM-2023-002", line_id=lines[1].id, location="Line B - Đầu line",
+                   install_date=today - timedelta(days=365), status="running",
+                   current_running_hours=Decimal("5800"), maintenance_interval_hours=2000),
+            Machine(code="MC-B02", name="Máy gắn chip Fuji NXT III", name_en="Fuji NXT III Mounter",
+                   machine_type="smt", model="NXT III", manufacturer="Fuji",
+                   serial_number="FUJI-2022-008", line_id=lines[1].id, location="Line B - Giữa line",
+                   install_date=today - timedelta(days=730), status="idle",
+                   current_running_hours=Decimal("10500"), maintenance_interval_hours=3000,
+                   last_maintenance_date=today - timedelta(days=7)),
+            # Line C - Assembly
+            Machine(code="MC-C01", name="Robot hàn Fanuc M-20iD/25", name_en="Fanuc Welding Robot",
+                   machine_type="welding", model="M-20iD/25", manufacturer="Fanuc",
+                   serial_number="FAN-2021-020", line_id=lines[2].id, location="Line C - Trạm 1",
+                   install_date=today - timedelta(days=1095), status="running",
+                   current_running_hours=Decimal("16800"), maintenance_interval_hours=5000,
+                   last_maintenance_date=today - timedelta(days=45)),
+            Machine(code="MC-C02", name="Máy vặn ốc tự động Janome", name_en="Janome Auto Screwdriver",
+                   machine_type="assembly", model="JR3000", manufacturer="Janome",
+                   serial_number="JAN-2022-005", line_id=lines[2].id, location="Line C - Trạm 3",
+                   install_date=today - timedelta(days=730), status="running",
+                   current_running_hours=Decimal("9200"), maintenance_interval_hours=4000),
+            Machine(code="MC-C03", name="Máy ép nhiệt Hot Press", name_en="Hot Press Machine",
+                   machine_type="press", model="HP-500T", manufacturer="Towa",
+                   serial_number="TOW-2020-011", line_id=lines[2].id, location="Line C - Trạm 5",
+                   install_date=today - timedelta(days=1460), status="broken",
+                   current_running_hours=Decimal("24500"), maintenance_interval_hours=3000,
+                   last_maintenance_date=today - timedelta(days=3)),
+            # Line D - Testing & Packaging
+            Machine(code="MC-D01", name="Máy kiểm tra AOI Omron VT-S730", name_en="Omron AOI VT-S730",
+                   machine_type="testing", model="VT-S730", manufacturer="Omron",
+                   serial_number="OMR-2022-003", line_id=lines[3].id, location="Line D - Kiểm tra",
+                   install_date=today - timedelta(days=730), status="running",
+                   current_running_hours=Decimal("11000"), maintenance_interval_hours=5000,
+                   last_maintenance_date=today - timedelta(days=90)),
+            Machine(code="MC-D02", name="Máy đóng gói tự động Omori", name_en="Omori Auto Packing",
+                   machine_type="packaging", model="STN-7500", manufacturer="Omori",
+                   serial_number="OMO-2023-001", line_id=lines[3].id, location="Line D - Đóng gói",
+                   install_date=today - timedelta(days=365), status="maintenance",
+                   current_running_hours=Decimal("6200"), maintenance_interval_hours=3000),
+        ]
+        session.add_all(machines_data)
+        await session.flush()
+        print(f"✅ Machines seeded ({len(machines_data)} machines)")
+
+        # ============== Phase 2: Machine Parts ==============
+        machine_parts = [
+            # MC-A01 parts
+            MachinePart(machine_id=machines_data[0].id, material_id=materials_data[0].id,
+                       position="Head Sensor", lifetime_hours=Decimal("8000"),
+                       current_hours=Decimal("6800"), lifetime_percentage=Decimal("15.00"),
+                       installed_date=today - timedelta(days=400), status="warning",
+                       serial_number="SNS-A01-001"),
+            MachinePart(machine_id=machines_data[0].id, material_id=materials_data[5].id,
+                       position="Main Belt", lifetime_hours=Decimal("5000"),
+                       current_hours=Decimal("4800"), lifetime_percentage=Decimal("4.00"),
+                       installed_date=today - timedelta(days=300), status="critical",
+                       serial_number="BLT-A01-001"),
+            # MC-A02 parts
+            MachinePart(machine_id=machines_data[1].id, material_id=materials_data[1].id,
+                       position="Servo Driver Head 1", lifetime_hours=Decimal("20000"),
+                       current_hours=Decimal("15000"), lifetime_percentage=Decimal("25.00"),
+                       installed_date=today - timedelta(days=900), status="warning",
+                       serial_number="SRV-A02-001"),
+            MachinePart(machine_id=machines_data[1].id, material_id=materials_data[4].id,
+                       position="Motor X-axis", lifetime_hours=Decimal("20000"),
+                       current_hours=Decimal("8000"), lifetime_percentage=Decimal("60.00"),
+                       installed_date=today - timedelta(days=500), status="active",
+                       serial_number="MTR-A02-001"),
+            MachinePart(machine_id=machines_data[1].id, material_id=materials_data[6].id,
+                       position="Bearing Y-axis", lifetime_hours=Decimal("10000"),
+                       current_hours=Decimal("9800"), lifetime_percentage=Decimal("2.00"),
+                       installed_date=today - timedelta(days=600), status="critical",
+                       serial_number="BRG-A02-001"),
+            # MC-A03 parts
+            MachinePart(machine_id=machines_data[2].id, material_id=materials_data[0].id,
+                       position="Temperature Sensor Zone 5", lifetime_hours=Decimal("8000"),
+                       current_hours=Decimal("3000"), lifetime_percentage=Decimal("62.50"),
+                       installed_date=today - timedelta(days=200), status="active",
+                       serial_number="SNS-A03-001"),
+            # MC-B02 parts
+            MachinePart(machine_id=machines_data[4].id, material_id=materials_data[2].id,
+                       position="Vision Camera", lifetime_hours=Decimal("15000"),
+                       current_hours=Decimal("10500"), lifetime_percentage=Decimal("30.00"),
+                       installed_date=today - timedelta(days=730), status="warning",
+                       serial_number="CAM-B02-001"),
+            # MC-C01 parts
+            MachinePart(machine_id=machines_data[5].id, material_id=materials_data[4].id,
+                       position="Welding Arm Motor", lifetime_hours=Decimal("20000"),
+                       current_hours=Decimal("2000"), lifetime_percentage=Decimal("90.00"),
+                       installed_date=today - timedelta(days=120), status="active",
+                       serial_number="MTR-C01-001"),
+            MachinePart(machine_id=machines_data[5].id, material_id=materials_data[5].id,
+                       position="Feed Belt", lifetime_hours=Decimal("5000"),
+                       current_hours=Decimal("5000"), lifetime_percentage=Decimal("0.00"),
+                       installed_date=today - timedelta(days=350), status="expired",
+                       serial_number="BLT-C01-001"),
+            # MC-C03 parts (broken machine)
+            MachinePart(machine_id=machines_data[7].id, material_id=materials_data[3].id,
+                       position="Main PLC", lifetime_hours=Decimal("30000"),
+                       current_hours=Decimal("24500"), lifetime_percentage=Decimal("18.33"),
+                       installed_date=today - timedelta(days=1460), status="warning",
+                       serial_number="PLC-C03-001"),
+            # MC-D01 parts
+            MachinePart(machine_id=machines_data[8].id, material_id=materials_data[2].id,
+                       position="AOI Camera Main", lifetime_hours=Decimal("15000"),
+                       current_hours=Decimal("11000"), lifetime_percentage=Decimal("26.67"),
+                       installed_date=today - timedelta(days=730), status="warning",
+                       serial_number="CAM-D01-001"),
+        ]
+        session.add_all(machine_parts)
+        await session.flush()
+        print(f"✅ Machine Parts seeded ({len(machine_parts)} parts)")
+
+        # ============== Phase 2: Maintenance Logs ==============
+        maint_user = users[3]  # maintenance user
+        eng_user = users[4]    # engineering user
+
+        maint_logs = [
+            MaintenanceLog(log_number="ML-001", machine_id=machines_data[0].id,
+                          maintenance_type="preventive", maintenance_date=today - timedelta(days=15),
+                          shift="A", running_hours_at_time=Decimal("12200"),
+                          description="Bảo trì định kỳ máy in kem hàn DEK. Vệ sinh stencil, kiểm tra alignment.",
+                          action_taken="Vệ sinh head, calibrate alignment, thay dầu bôi trơn.",
+                          downtime_hours=Decimal("4"), performed_by=maint_user.id, status="completed"),
+            MaintenanceLog(log_number="ML-002", machine_id=machines_data[1].id,
+                          maintenance_type="corrective", maintenance_date=today - timedelta(days=30),
+                          shift="B", running_hours_at_time=Decimal("17800"),
+                          description="Servo driver Head 1 báo lỗi E50. Máy dừng đột ngột.",
+                          root_cause="Servo driver quá nhiệt do quạt tản nhiệt bị bụi.",
+                          action_taken="Vệ sinh quạt tản nhiệt, reset alarm. Theo dõi thêm.",
+                          downtime_hours=Decimal("6"), performed_by=maint_user.id, status="completed"),
+            MaintenanceLog(log_number="ML-003", machine_id=machines_data[2].id,
+                          maintenance_type="corrective", maintenance_date=today - timedelta(days=60),
+                          shift="A", running_hours_at_time=Decimal("21500"),
+                          description="Nhiệt độ zone 7 không ổn định, sai lệch ±5°C.",
+                          root_cause="Thermocouple bị lão hóa.",
+                          action_taken="Thay thermocouple zone 7, calibrate lại nhiệt độ.",
+                          downtime_hours=Decimal("3"), performed_by=eng_user.id, status="completed"),
+            MaintenanceLog(log_number="ML-004", machine_id=machines_data[7].id,
+                          maintenance_type="emergency", maintenance_date=today - timedelta(days=3),
+                          shift="A", running_hours_at_time=Decimal("24500"),
+                          description="Máy ép nhiệt dừng khẩn cấp. Xylanh chính bị kẹt, rò rỉ dầu thủy lực.",
+                          root_cause="Phớt xylanh chính bị mòn, gây rò rỉ dầu và mất áp suất.",
+                          action_taken="Tạm dừng máy, chờ linh kiện thay thế từ NCC.",
+                          downtime_hours=Decimal("72"), performed_by=maint_user.id, status="open"),
+            MaintenanceLog(log_number="ML-005", machine_id=machines_data[4].id,
+                          maintenance_type="preventive", maintenance_date=today - timedelta(days=7),
+                          shift="A", running_hours_at_time=Decimal("10500"),
+                          description="PM định kỳ. Kiểm tra nozzle, feeder, vision camera.",
+                          action_taken="Vệ sinh nozzle, calibrate camera, bôi mỡ trượt.",
+                          downtime_hours=Decimal("3"), performed_by=eng_user.id, status="completed"),
+            MaintenanceLog(log_number="ML-006", machine_id=machines_data[8].id,
+                          maintenance_type="predictive", maintenance_date=today - timedelta(days=90),
+                          shift="B", running_hours_at_time=Decimal("9500"),
+                          description="Kiểm tra dự đoán: camera AOI có dấu hiệu giảm độ nét.",
+                          action_taken="Vệ sinh lens, kiểm tra cáp kết nối. Đề xuất thay camera trong 2 tháng tới.",
+                          downtime_hours=Decimal("2"), performed_by=eng_user.id, status="completed"),
+        ]
+        session.add_all(maint_logs)
+        await session.flush()
+
+        # Maintenance log items (parts used)
+        maint_items = [
+            MaintenanceLogItem(log_id=maint_logs[0].id, material_id=materials_data[11].id,
+                              quantity=Decimal("1"), action_type="consumed", note="Mỡ bôi trơn cho rail"),
+            MaintenanceLogItem(log_id=maint_logs[2].id, material_id=materials_data[0].id,
+                              quantity=Decimal("1"), action_type="replaced", note="Thay thermocouple zone 7"),
+            MaintenanceLogItem(log_id=maint_logs[4].id, material_id=materials_data[11].id,
+                              quantity=Decimal("0.5"), action_type="consumed", note="Mỡ bôi trơn"),
+            MaintenanceLogItem(log_id=maint_logs[4].id, material_id=materials_data[9].id,
+                              quantity=Decimal("2"), action_type="consumed", note="Khăn lau vệ sinh"),
+        ]
+        session.add_all(maint_items)
+        await session.flush()
+        print(f"✅ Maintenance Logs seeded ({len(maint_logs)} logs, {len(maint_items)} items)")
+
+        # ============== Phase 2: Running Hours (last 7 days) ==============
+        running_records = []
+        for day_offset in range(7, 0, -1):
+            record_date = today - timedelta(days=day_offset)
+            for i, machine in enumerate(machines_data):
+                if machine.status in ("broken", "maintenance", "decommissioned"):
+                    hours = Decimal("0") if machine.status == "broken" and day_offset <= 3 else Decimal(str(round(6 + (i % 4) * 1.5, 1)))
+                elif machine.status == "idle":
+                    hours = Decimal(str(round(4 + (day_offset % 3), 1)))
+                else:
+                    hours = Decimal(str(round(7 + (i % 5) * 0.8 + (day_offset % 3) * 0.5, 1)))
+
+                cumulative = machine.current_running_hours - Decimal(str(day_offset)) * Decimal("8") + hours
+                running_records.append(
+                    MachineRunningHour(
+                        machine_id=machine.id,
+                        record_date=record_date,
+                        running_hours=hours,
+                        cumulative_hours=max(cumulative, Decimal("0")),
+                        shift=None,
+                        recorded_by=users[1].id,  # warehouse user
+                    )
+                )
+        session.add_all(running_records)
+        await session.flush()
+        print(f"✅ Running Hours seeded ({len(running_records)} records)")
+
         await session.commit()
-        print("\n🎉 Database seeding completed successfully!")
+        print("\n🎉 Database seeding completed successfully (Phase 1 + Phase 2)!")
 
 
 if __name__ == "__main__":

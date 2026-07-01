@@ -5,9 +5,9 @@ import {
 } from 'antd';
 import { PlusOutlined, CheckCircleOutlined, CloseCircleOutlined, EyeOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { receiptsApi, materialsApi, warehousesApi } from '../../api';
-import { RECEIPT_TYPES, STATUS_COLORS, STATUS_LABELS, formatCurrency } from '../../utils/constants';
-import type { Receipt, Material, Warehouse, Location, PaginatedResponse } from '../../types';
+import { receiptsApi, materialsApi, warehousesApi } from '../api';
+import { RECEIPT_TYPES, STATUS_COLORS, STATUS_LABELS, formatCurrency } from '../utils/constants';
+import type { Receipt, Material, Warehouse, Location, PaginatedResponse } from '../types';
 
 const { Title, Text } = Typography;
 

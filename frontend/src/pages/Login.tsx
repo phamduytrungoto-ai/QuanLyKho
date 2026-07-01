@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Form, Input, Button, message, App } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { authApi } from '../../api';
-import { useAuthStore } from '../../store';
+import { authApi } from '../api';
+import { useAuthStore } from '../store';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const login = useAuthStore((s) => s.login);
+  const login = useAuthStore((s: any) => s.login);
   const { message: msg } = App.useApp();
 
   const handleLogin = async (values: { username: string; password: string }) => {

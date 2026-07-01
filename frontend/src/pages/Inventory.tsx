@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Card, Table, Tag, Space, Select, Input, Button, Typography, App, Row, Col, Alert } from 'antd';
 import { SearchOutlined, WarningOutlined, ReloadOutlined, FilterOutlined } from '@ant-design/icons';
-import { inventoryApi, warehousesApi } from '../../api';
-import { MATERIAL_TYPES, formatNumber, formatCurrency } from '../../utils/constants';
-import type { InventoryRecord, InventoryAlert, Warehouse, PaginatedResponse } from '../../types';
+import { inventoryApi, warehousesApi } from '../api';
+import { MATERIAL_TYPES, formatNumber, formatCurrency } from '../utils/constants';
+import type { InventoryRecord, InventoryAlert, Warehouse, PaginatedResponse } from '../types';
 
 const { Title, Text } = Typography;
 

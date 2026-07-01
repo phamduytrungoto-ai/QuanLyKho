@@ -12,6 +12,13 @@ import InventoryPage from './pages/Inventory';
 import ReceiptsPage from './pages/Receipts';
 import IssuesPage from './pages/Issues';
 import UsersPage from './pages/Users';
+import MachinesPage from './pages/Machines';
+import MachineDetailPage from './pages/MachineDetail';
+import PartsTrackingPage from './pages/PartsTracking';
+import InventoryReportPage from './pages/Reports/InventoryReport';
+import StockCardPage from './pages/Reports/StockCard';
+import AbcAnalysisPage from './pages/Reports/AbcAnalysis';
+import MaintenanceCostPage from './pages/Reports/MaintenanceCost';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -48,6 +55,13 @@ export default function App() {
                       <Route path="/receipts" element={<ReceiptsPage />} />
                       <Route path="/issues" element={<IssuesPage />} />
                       <Route path="/users" element={<UsersPage />} />
+                      <Route path="/machines" element={<MachinesPage />} />
+                      <Route path="/machines/:id" element={<MachineDetailPage />} />
+                      <Route path="/parts-tracking" element={<PartsTrackingPage />} />
+                      <Route path="/reports/inventory" element={<InventoryReportPage />} />
+                      <Route path="/reports/stock-card" element={<StockCardPage />} />
+                      <Route path="/reports/abc-analysis" element={<AbcAnalysisPage />} />
+                      <Route path="/reports/maintenance-cost" element={<MaintenanceCostPage />} />
                     </Routes>
                   </AppLayout>
                 </ProtectedRoute>

@@ -9,9 +9,9 @@ services:
       POSTGRES_USER: wms_user
       POSTGRES_PASSWORD: wms_password
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pg_wms_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U wms_user -d wms_db"]
@@ -34,5 +34,5 @@ services:
       retries: 5
 
 volumes:
-  postgres_data:
+  pg_wms_data:
   redis_data:

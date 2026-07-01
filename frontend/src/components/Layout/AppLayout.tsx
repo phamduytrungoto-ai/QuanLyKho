@@ -16,6 +16,8 @@ import {
   MoonOutlined,
   SunOutlined,
   SafetyCertificateOutlined,
+  ToolOutlined,
+  PieChartOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore, useAppStore } from '../../store';
@@ -64,6 +66,26 @@ export default function AppLayout({ children }: AppLayoutProps) {
       key: '/issues',
       icon: <ExportOutlined />,
       label: 'Xuất kho',
+    },
+    {
+      key: 'machines_group',
+      icon: <ToolOutlined />,
+      label: 'Máy & Linh kiện',
+      children: [
+        { key: '/machines', label: 'Quản lý máy' },
+        { key: '/parts-tracking', label: 'Theo dõi linh kiện' },
+      ],
+    },
+    {
+      key: 'reports',
+      icon: <PieChartOutlined />,
+      label: 'Báo cáo',
+      children: [
+        { key: '/reports/inventory', label: 'Nhập - Xuất - Tồn' },
+        { key: '/reports/stock-card', label: 'Thẻ kho' },
+        { key: '/reports/abc-analysis', label: 'Phân tích ABC' },
+        { key: '/reports/maintenance-cost', label: 'Chi phí bảo trì' },
+      ],
     },
     {
       key: 'settings',

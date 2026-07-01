@@ -16,8 +16,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
 
     # Database
-    DATABASE_URL: str = "postgresql+asyncpg://wms_user:wms_password@localhost:5432/wms_db"
-    DATABASE_URL_SYNC: str = "postgresql://wms_user:wms_password@localhost:5432/wms_db"
+    DATABASE_URL: str = "postgresql+asyncpg://wms_user:wms_password@localhost:5433/wms_db"
+    DATABASE_URL_SYNC: str = "postgresql://wms_user:wms_password@localhost:5433/wms_db"
 
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"

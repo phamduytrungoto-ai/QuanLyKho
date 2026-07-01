@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Card, Table, Button, Space, Tag, Modal, Form, Input, Select, Typography, App, Row, Col, Tree } from 'antd';
 import { PlusOutlined, EditOutlined, EnvironmentOutlined, ReloadOutlined } from '@ant-design/icons';
-import { warehousesApi } from '../../api';
-import { WAREHOUSE_TYPES } from '../../utils/constants';
-import type { Warehouse, Location } from '../../types';
+import { warehousesApi } from '../api';
+import { WAREHOUSE_TYPES } from '../utils/constants';
+import type { Warehouse, Location } from '../types';
 
 const { Title, Text } = Typography;
 
@@ -23,8 +23,8 @@ export default function WarehousesPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const data = await warehousesApi.list();
-      setWarehouses(data);
+      const res = await warehousesApi.list();
+      setWarehouses(res.items.filter((w: any) => w.is_active));
     } catch { msg.error('Lỗi tải dữ liệu'); }
     finally { setLoading(false); }
   };

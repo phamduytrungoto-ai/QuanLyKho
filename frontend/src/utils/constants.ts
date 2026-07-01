@@ -96,3 +96,64 @@ export const formatNumber = (value?: number | string): string => {
   const num = typeof value === 'string' ? parseFloat(value) : value;
   return new Intl.NumberFormat('vi-VN').format(num);
 };
+
+// ==================== Phase 2 Constants ====================
+
+export const MACHINE_STATUSES = [
+  { value: 'running', label: 'Đang chạy', color: '#52c41a', icon: '🟢' },
+  { value: 'idle', label: 'Chờ', color: '#faad14', icon: '🟡' },
+  { value: 'broken', label: 'Hỏng', color: '#ff4d4f', icon: '🔴' },
+  { value: 'maintenance', label: 'Bảo trì', color: '#1677ff', icon: '🔵' },
+  { value: 'decommissioned', label: 'Ngừng sử dụng', color: '#8c8c8c', icon: '⚪' },
+];
+
+export const MACHINE_STATUS_MAP: Record<string, { label: string; color: string; icon: string }> = {
+  running: { label: 'Đang chạy', color: '#52c41a', icon: '🟢' },
+  idle: { label: 'Chờ', color: '#faad14', icon: '🟡' },
+  broken: { label: 'Hỏng', color: '#ff4d4f', icon: '🔴' },
+  maintenance: { label: 'Bảo trì', color: '#1677ff', icon: '🔵' },
+  decommissioned: { label: 'Ngừng sử dụng', color: '#8c8c8c', icon: '⚪' },
+};
+
+export const MACHINE_TYPES = [
+  { value: 'smt', label: 'SMT' },
+  { value: 'assembly', label: 'Lắp ráp' },
+  { value: 'testing', label: 'Kiểm tra' },
+  { value: 'packaging', label: 'Đóng gói' },
+  { value: 'welding', label: 'Hàn' },
+  { value: 'press', label: 'Ép/Dập' },
+  { value: 'injection', label: 'Ép phun' },
+  { value: 'cnc', label: 'CNC' },
+  { value: 'other', label: 'Khác' },
+];
+
+export const MAINTENANCE_TYPES = [
+  { value: 'corrective', label: 'Sửa chữa', color: '#ff4d4f' },
+  { value: 'preventive', label: 'Bảo trì định kỳ', color: '#1677ff' },
+  { value: 'predictive', label: 'Bảo trì dự đoán', color: '#722ed1' },
+  { value: 'emergency', label: 'Khẩn cấp', color: '#fa541c' },
+];
+
+export const MAINTENANCE_TYPE_MAP: Record<string, { label: string; color: string }> = {
+  corrective: { label: 'Sửa chữa', color: '#ff4d4f' },
+  preventive: { label: 'Bảo trì ĐK', color: '#1677ff' },
+  predictive: { label: 'Dự đoán', color: '#722ed1' },
+  emergency: { label: 'Khẩn cấp', color: '#fa541c' },
+};
+
+export const PART_STATUS_MAP: Record<string, { label: string; color: string }> = {
+  active: { label: 'Tốt', color: '#52c41a' },
+  warning: { label: 'Cảnh báo', color: '#faad14' },
+  critical: { label: 'Nguy hiểm', color: '#ff4d4f' },
+  expired: { label: 'Hết hạn', color: '#8c8c8c' },
+  replaced: { label: 'Đã thay', color: '#1677ff' },
+};
+
+export const getLifetimeColor = (percentage: number): string => {
+  if (percentage <= 0) return '#8c8c8c';
+  if (percentage <= 10) return '#ff4d4f';
+  if (percentage <= 30) return '#fa8c16';
+  if (percentage <= 50) return '#faad14';
+  return '#52c41a';
+};
+

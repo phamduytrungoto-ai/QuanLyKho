@@ -212,3 +212,139 @@ export const dashboardApi = {
     return data;
   },
 };
+
+// ==================== Phase 2 APIs ====================
+
+export const linesApi = {
+  list: async () => {
+    const { data } = await apiClient.get('/machines/lines');
+    return data;
+  },
+  create: async (lineData: any) => {
+    const { data } = await apiClient.post('/machines/lines', lineData);
+    return data;
+  },
+  update: async (id: number, lineData: any) => {
+    const { data } = await apiClient.put(`/machines/lines/${id}`, lineData);
+    return data;
+  },
+};
+
+export const machinesApi = {
+  list: async (params?: Record<string, any>) => {
+    const { data } = await apiClient.get('/machines', { params });
+    return data;
+  },
+  get: async (id: number) => {
+    const { data } = await apiClient.get(`/machines/${id}`);
+    return data;
+  },
+  create: async (machineData: any) => {
+    const { data } = await apiClient.post('/machines', machineData);
+    return data;
+  },
+  update: async (id: number, machineData: any) => {
+    const { data } = await apiClient.put(`/machines/${id}`, machineData);
+    return data;
+  },
+  // Parts
+  listParts: async (machineId: number) => {
+    const { data } = await apiClient.get(`/machines/${machineId}/parts`);
+    return data;
+  },
+  installPart: async (machineId: number, partData: any) => {
+    const { data } = await apiClient.post(`/machines/${machineId}/parts`, partData);
+    return data;
+  },
+  updatePart: async (machineId: number, partId: number, partData: any) => {
+    const { data } = await apiClient.put(`/machines/${machineId}/parts/${partId}`, partData);
+    return data;
+  },
+  replacePart: async (machineId: number, partId: number, replaceData: any) => {
+    const { data } = await apiClient.post(`/machines/${machineId}/parts/${partId}/replace`, replaceData);
+    return data;
+  },
+  // Maintenance
+  listMaintenance: async (machineId: number, params?: Record<string, any>) => {
+    const { data } = await apiClient.get(`/machines/${machineId}/maintenance`, { params });
+    return data;
+  },
+  createMaintenance: async (machineId: number, logData: any) => {
+    const { data } = await apiClient.post(`/machines/${machineId}/maintenance`, logData);
+    return data;
+  },
+  // Running Hours
+  listRunningHours: async (machineId: number, days = 30) => {
+    const { data } = await apiClient.get(`/machines/${machineId}/running-hours`, { params: { days } });
+    return data;
+  },
+  recordRunningHours: async (machineId: number, hourData: any) => {
+    const { data } = await apiClient.post(`/machines/${machineId}/running-hours`, hourData);
+    return data;
+  },
+  // Timeline
+  getTimeline: async (machineId: number, limit = 50) => {
+    const { data } = await apiClient.get(`/machines/${machineId}/timeline`, { params: { limit } });
+    return data;
+  },
+};
+
+export const partsTrackingApi = {
+  getLifetimeAlerts: async (params?: { threshold?: number; line_id?: number; machine_id?: number }) => {
+    const { data } = await apiClient.get('/parts/lifetime-alerts', { params });
+    return data;
+  },
+  getLeadTimeAlerts: async () => {
+    const { data } = await apiClient.get('/parts/lead-time-alerts');
+    return data;
+  },
+  getOverview: async () => {
+    const { data } = await apiClient.get('/parts/overview');
+    return data;
+  },
+  getDashboardSummary: async () => {
+    const { data } = await apiClient.get('/parts/dashboard-summary');
+    return data;
+  },
+};
+
+// ==================== Phase 3 APIs ====================
+
+export const reportsApi = {
+  getInventoryValuation: async (params?: { start_date?: string; end_date?: string; warehouse_id?: number }) => {
+    const { data } = await apiClient.get('/reports/inventory-valuation', { params });
+    return data;
+  },
+  exportInventoryValuation: (params?: { start_date?: string; end_date?: string; warehouse_id?: number }) => {
+    const qs = new URLSearchParams(params as any).toString();
+    window.open(`http://localhost:8000/api/v1/reports/inventory-valuation?export=true&${qs}`);
+  },
+
+  getStockCard: async (params: { material_id: number; start_date?: string; end_date?: string }) => {
+    const { data } = await apiClient.get('/reports/stock-card', { params });
+    return data;
+  },
+  exportStockCard: (params: { material_id: number; start_date?: string; end_date?: string }) => {
+    const qs = new URLSearchParams(params as any).toString();
+    window.open(`http://localhost:8000/api/v1/reports/stock-card?export=true&${qs}`);
+  },
+
+  getAbcAnalysis: async (params?: { start_date?: string; end_date?: string }) => {
+    const { data } = await apiClient.get('/reports/abc-analysis', { params });
+    return data;
+  },
+  exportAbcAnalysis: (params?: { start_date?: string; end_date?: string }) => {
+    const qs = new URLSearchParams(params as any).toString();
+    window.open(`http://localhost:8000/api/v1/reports/abc-analysis?export=true&${qs}`);
+  },
+
+  getMaintenanceCost: async (params?: { start_date?: string; end_date?: string }) => {
+    const { data } = await apiClient.get('/reports/maintenance-cost', { params });
+    return data;
+  },
+  exportMaintenanceCost: (params?: { start_date?: string; end_date?: string }) => {
+    const qs = new URLSearchParams(params as any).toString();
+    window.open(`http://localhost:8000/api/v1/reports/maintenance-cost?export=true&${qs}`);
+  },
+};
+

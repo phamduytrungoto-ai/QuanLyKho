@@ -7,6 +7,10 @@ from app.models.inventory import Inventory, InventoryTransaction, MaterialMinMax
 from app.models.receipt import Receipt, ReceiptItem
 from app.models.issue import Issue, IssueItem
 from app.models.audit_log import AuditLog
+from app.models.machine import (
+    ProductionLine, Machine, MachinePart,
+    MaintenanceLog, MaintenanceLogItem, MachineRunningHour,
+)
 
 __all__ = [
     "User",
@@ -16,4 +20,7 @@ __all__ = [
     "Receipt", "ReceiptItem",
     "Issue", "IssueItem",
     "AuditLog",
+    # Phase 2
+    "ProductionLine", "Machine", "MachinePart",
+    "MaintenanceLog", "MaintenanceLogItem", "MachineRunningHour",
 ]

@@ -7,9 +7,9 @@ import {
   PlusOutlined, SearchOutlined, EditOutlined, DeleteOutlined,
   EyeOutlined, ReloadOutlined, FilterOutlined,
 } from '@ant-design/icons';
-import { materialsApi } from '../../api';
-import { MATERIAL_TYPES, STATUS_COLORS, STATUS_LABELS, formatCurrency } from '../../utils/constants';
-import type { Material, MaterialCategory, Unit, Supplier, PaginatedResponse } from '../../types';
+import { materialsApi } from '../api';
+import { MATERIAL_TYPES, STATUS_COLORS, STATUS_LABELS, formatCurrency } from '../utils/constants';
+import type { Material, MaterialCategory, Unit, Supplier, PaginatedResponse } from '../types';
 
 const { Title, Text } = Typography;
 

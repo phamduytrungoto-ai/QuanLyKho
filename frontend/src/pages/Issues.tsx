@@ -5,9 +5,9 @@ import {
 } from 'antd';
 import { PlusOutlined, CheckCircleOutlined, CloseCircleOutlined, SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { issuesApi, materialsApi, warehousesApi } from '../../api';
-import { ISSUE_TYPES, SHIFTS, STATUS_COLORS, STATUS_LABELS, formatCurrency } from '../../utils/constants';
-import type { Issue, Material, Location, PaginatedResponse } from '../../types';
+import { issuesApi, materialsApi, warehousesApi } from '../api';
+import { ISSUE_TYPES, SHIFTS, STATUS_COLORS, STATUS_LABELS, formatCurrency } from '../utils/constants';
+import type { Issue, Material, Location, PaginatedResponse } from '../types';
 
 const { Title, Text } = Typography;
 

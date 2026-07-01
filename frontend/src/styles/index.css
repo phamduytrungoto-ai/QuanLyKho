@@ -117,6 +117,7 @@ body {
   right: -100px;
   border-radius: 50%;
   animation: float 8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .login-page::after {
@@ -129,6 +130,7 @@ body {
   left: -80px;
   border-radius: 50%;
   animation: float 10s ease-in-out infinite reverse;
+  pointer-events: none;
 }
 
 @keyframes float {
@@ -186,13 +188,19 @@ body {
 }
 
 .login-card .ant-input,
-.login-card .ant-input-password .ant-input {
+.login-card .ant-input-affix-wrapper {
   background: rgba(255, 255, 255, 0.08) !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
   color: #fff !important;
   height: 44px;
   border-radius: var(--radius-md);
   font-size: 14px;
+}
+
+.login-card .ant-input-affix-wrapper > input.ant-input {
+  background: transparent !important;
+  color: #fff !important;
+  height: auto;
 }
 
 .login-card .ant-input::placeholder {

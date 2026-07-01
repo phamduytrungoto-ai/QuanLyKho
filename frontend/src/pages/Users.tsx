@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Card, Table, Button, Space, Tag, Modal, Form, Input, Select, Typography, App, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, UserOutlined, SearchOutlined, ReloadOutlined } from '@ant-design/icons';
-import { usersApi } from '../../api';
-import { ROLES, ROLE_LABELS } from '../../utils/constants';
-import type { User } from '../../types';
+import { usersApi } from '../api';
+import { ROLES, ROLE_LABELS } from '../utils/constants';
+import type { User } from '../types';
 
 const { Title, Text } = Typography;
 

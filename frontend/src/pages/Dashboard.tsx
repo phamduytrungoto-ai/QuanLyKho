@@ -11,14 +11,15 @@ import {
   ExperimentOutlined,
 } from '@ant-design/icons';
 import ReactECharts from 'echarts-for-react';
-import { dashboardApi } from '../../api';
-import { formatCurrency, formatNumber, STATUS_COLORS, STATUS_LABELS } from '../../utils/constants';
-import type { DashboardSummary, RecentActivity } from '../../types';
+import { dashboardApi, partsTrackingApi } from '../api';
+import { formatCurrency, formatNumber, STATUS_COLORS, STATUS_LABELS } from '../utils/constants';
+import type { DashboardSummary, RecentActivity, MachineDashboardSummary } from '../types';
 
 const { Title, Text } = Typography;
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [machineSummary, setMachineSummary] = useState<MachineDashboardSummary | null>(null);
   const [activities, setActivities] = useState<RecentActivity[]>([]);
   const [lowStock, setLowStock] = useState<any[]>([]);
   const [inventoryValue, setInventoryValue] = useState<any[]>([]);
@@ -30,13 +31,15 @@ export default function DashboardPage() {
 
   const loadData = async () => {
     try {
-      const [summaryData, activitiesData, lowStockData, valueData] = await Promise.all([
+      const [summaryData, machineData, activitiesData, lowStockData, valueData] = await Promise.all([
         dashboardApi.getSummary(),
+        partsTrackingApi.getDashboardSummary(),
         dashboardApi.getRecentActivities(8),
         dashboardApi.getLowStock(),
         dashboardApi.getInventoryValue(),
       ]);
       setSummary(summaryData);
+      setMachineSummary(machineData);
       setActivities(activitiesData);
       setLowStock(lowStockData);
       setInventoryValue(valueData);
@@ -56,25 +59,19 @@ export default function DashboardPage() {
       suffix: 'mã',
     },
     {
-      title: 'Linh kiện',
-      value: summary?.total_spare_parts || 0,
-      icon: <ToolOutlined />,
-      gradient: 'var(--gradient-success)',
-      suffix: 'mã',
-    },
-    {
-      title: 'Tiêu hao',
-      value: summary?.total_consumables || 0,
-      icon: <ExperimentOutlined />,
-      gradient: 'var(--gradient-warning)',
-      suffix: 'mã',
-    },
-    {
       title: 'Giá trị tồn kho',
       value: summary?.total_inventory_value || 0,
       icon: <DollarOutlined />,
       gradient: 'var(--gradient-dark)',
       formatter: true,
+    },
+    {
+      title: 'Nhập/Xuất hôm nay',
+      value: `${summary?.today_receipts || 0} / ${summary?.today_issues || 0}`,
+      icon: <InboxOutlined />,
+      gradient: 'linear-gradient(135deg, #eb2f96 0%, #c41d7f 100%)',
+      suffix: 'phiếu',
+      rawValue: true,
     },
     {
       title: 'Sắp hết hàng',
@@ -84,26 +81,33 @@ export default function DashboardPage() {
       suffix: 'mã',
     },
     {
-      title: 'Phiếu nhập chờ duyệt',
-      value: summary?.pending_receipts || 0,
-      icon: <ImportOutlined />,
-      gradient: 'linear-gradient(135deg, #722ed1 0%, #531dab 100%)',
-      suffix: 'phiếu',
+      title: 'Tổng Máy',
+      value: machineSummary?.total_machines || 0,
+      icon: <ToolOutlined />,
+      gradient: 'var(--gradient-success)',
+      suffix: 'máy',
     },
     {
-      title: 'Phiếu xuất chờ duyệt',
-      value: summary?.pending_issues || 0,
-      icon: <ExportOutlined />,
-      gradient: 'linear-gradient(135deg, #13c2c2 0%, #08979c 100%)',
-      suffix: 'phiếu',
-    },
-    {
-      title: 'Nhập/Xuất hôm nay',
-      value: `${summary?.today_receipts || 0} / ${summary?.today_issues || 0}`,
-      icon: <InboxOutlined />,
-      gradient: 'linear-gradient(135deg, #eb2f96 0%, #c41d7f 100%)',
-      suffix: 'phiếu',
+      title: 'Máy Đang Chạy',
+      value: machineSummary?.running_machines || 0,
+      icon: <ExperimentOutlined />,
+      gradient: 'linear-gradient(135deg, #52c41a 0%, #389e0d 100%)',
+      suffix: `/${machineSummary?.total_machines || 0}`,
       rawValue: true,
+    },
+    {
+      title: 'Linh kiện Nguy hiểm',
+      value: machineSummary?.parts_critical_count || 0,
+      icon: <WarningOutlined />,
+      gradient: 'linear-gradient(135deg, #f5222d 0%, #cf1322 100%)',
+      suffix: 'LK',
+    },
+    {
+      title: 'Sửa chữa tháng',
+      value: machineSummary?.maintenance_this_month || 0,
+      icon: <ToolOutlined />,
+      gradient: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
+      suffix: 'lần',
     },
   ];
 
